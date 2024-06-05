@@ -24,17 +24,52 @@ namespace TestApplication
         public MainWindow()
         {
             InitializeComponent();
+            LoadData();
+        }
+
+        private void LoadData()
+        {
             using (var context = new Models.test_dbEntities())
             {
                 var query = from user in context.User
                             from course in user.Course
                             select new
                             {
+                                UserId = user.Id,
+                                CourseId = course.Id,
                                 userName = user.UserName,
                                 courseName = course.CourseName
                             };
 
                 dataGrid.ItemsSource = query.ToList();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var dataContext = button?.DataContext;
+
+            if (dataContext != null)
+            {
+                dynamic item = dataContext;
+                int userId = item.UserId;
+                int courseId = item.CourseId;
+
+                using (var context = new Models.test_dbEntities())
+                {
+                    var user = context.User.Include("Course").FirstOrDefault(u => u.Id == userId);
+                    if (user != null)
+                    {
+                        var course = user.Course.FirstOrDefault(c => c.Id == courseId);
+                        if (course != null)
+                        {
+                            user.Course.Remove(course);
+                            context.SaveChanges();
+                            LoadData();
+                        }
+                    }
+                }
             }
         }
     }

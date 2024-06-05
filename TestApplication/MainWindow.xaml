@@ -9,6 +9,20 @@
         Height="450" 
         Width="800">
     <Grid>
-        <DataGrid Name="dataGrid" AutoGenerateColumns="True" />
+        <Grid>
+            <DataGrid Name="dataGrid" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="User Name" Binding="{Binding userName}" />
+                    <DataGridTextColumn Header="Course Name" Binding="{Binding courseName}" />
+                    <DataGridTemplateColumn Header="Actions">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Click="Button_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>
